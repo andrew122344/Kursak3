@@ -1,15 +1,18 @@
 const contentTabs=document.querySelectorAll('.tab-content');
-const categoriesUrl=`http://localhost/lab5/api/categories.php`;
-const categoriesTableBody=document.querySelector('#categoryTable tbody');
-const categoriesForm=document.getElementById('categoryForm');
-const propertiesUrl=`http://localhost/lab5/api/properties.php`;
+const applsTimeUrl=`http://localhost/Kursak/lab5/api/ApplsTime.php`;
+const applsTimeTableBody=document.querySelector('#applTimeTable tbody');
+const applsTimeForm=document.getElementById('applTimeForm');
+const sphrsofApplUrl=`http://localhost/Kursak/lab5/api/SphrsofAppl.php`;
+const sphrsofApplTableBody=document.querySelector('#sphrofApplTable tbody');
+const sphrsofApplForm=document.getElementById('sphrofApplForm');
+const propertiesUrl=`http://localhost/Kursak/lab5/api/Properties.php`;
 const propertiesTableBody=document.querySelector('#propertyTable tbody');
 const propertiesForm=document.getElementById('propertyForm');
-const backpacksUrl=`http://localhost/lab5/api/backpacks.php`;
-const backpacksTableBody=document.querySelector('#backpackTable tbody');
-const backpacksForm=document.getElementById('backpackForm');
+const sunScreensUrl=`http://localhost/Kursak/lab5/api/SunScreens.php`;
+const sunScreensTableBody=document.querySelector('#sunScreenTable tbody');
+const sunScreensForm=document.getElementById('sunScreenForm');
 const loginForm=document.getElementById('loginForm');
-const profileUrl=`http://localhost/lab5/api/profile.php`;
+const profileUrl=`http://localhost/Kursak/lab5/api/Profile.php`;
 function getLoginInfo(){
     fetch(profileUrl)
     .then(response => {
@@ -25,9 +28,10 @@ function getLoginInfo(){
         } else{
             document.getElementById('loginContainer').style.display='none';
             document.getElementById('contentContainer').style.display='block';
-            displayCategories();
+            displayApplsTime();
+            displaySphrsofAppl();
             displayProperties();
-            displayBackpacks();
+            displaySunScreens();
         }
     })
     .catch(error => {
@@ -40,9 +44,9 @@ function showContentTab(target){
     }
     document.querySelector(target).style.display='block';
 }
-showContentTab('#categoryContent');
-function displayCategories(){
-    fetch(categoriesUrl)
+showContentTab('#applTimeContent');
+function displayApplsTime(){
+    fetch(applsTimeUrl)
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -50,19 +54,46 @@ function displayCategories(){
         return response.json();
     })
     .then(data => {
-        let categories=data.categories;
+        let applsTime=data.applsTime;
         let content=``;
-        for (let i=0;i<categories.length;i++){
+        for (let i=0;i<applsTime.length;i++){
             content+=`<tr>
-                    <td>${categories[i].id}</td>
-                    <td>${categories[i].name}</td>
+                    <td>${applsTime[i].id}</td>
+                    <td>${applsTime[i].name}</td>
                     <td>
-                        <a class="btn btn-warning edit-category-btn" data-id="${categories[i].id}" href="#">Редагувати</a>
-                        <a class="btn btn-danger delete-category-btn" data-id="${categories[i].id}" href="#">Видалити</a>
+                        <a class="btn btn-warning edit-applTime-btn" data-id="${applsTime[i].id}" href="#">Редагувати</a>
+                        <a class="btn btn-danger delete-applTime-btn" data-id="${applsTime[i].id}" href="#">Видалити</a>
                     </td>
                 </tr>`;
         }
-        categoriesTableBody.innerHTML=content;
+        applsTimeTableBody.innerHTML=content;
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+function displaySphrsofAppl(){
+    fetch(sphrsofApplUrl)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        let sphrsofAppl=data.sphrsofAppl;
+        let content=``;
+        for (let i=0;i<sphrsofAppl.length;i++){
+            content+=`<tr>
+                    <td>${sphrsofAppl[i].id}</td>
+                    <td>${sphrsofAppl[i].name}</td>
+                    <td>
+                        <a class="btn btn-warning edit-sphrofAppl-btn" data-id="${sphrsofAppl[i].id}" href="#">Редагувати</a>
+                        <a class="btn btn-danger delete-sphrofAppl-btn" data-id="${sphrsofAppl[i].id}" href="#">Видалити</a>
+                    </td>
+                </tr>`;
+        }
+        sphrsofApplTableBody.innerHTML=content;
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
@@ -96,8 +127,8 @@ function displayProperties(){
         console.error('There was a problem with the fetch operation:', error);
     });
 }
-function displayBackpacks(){
-    fetch(backpacksUrl)
+function displaySunScreens(){
+    fetch(sunScreensUrl)
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -105,37 +136,38 @@ function displayBackpacks(){
         return response.json();
     })
     .then(data => {
-        let backpacks=data.backpacks;
+        let sunScreens=data.sunScreens;
         let content=``;
-        for (let i=0;i<backpacks.length;i++){
+        for (let i=0;i<sunScreens.length;i++){
             let propertiesContent=``;
-            for (const [key, value] of Object.entries(backpacks[i].properties)) {
+            for (const [key, value] of Object.entries(sunScreens[i].properties)) {
                 propertiesContent+=`${key}: ${value} </br>`;
             }
             content+=`<tr>
-                    <td>${backpacks[i].id}</td>
-                    <td>${backpacks[i].vendor}</td>
-                    <td>${backpacks[i].model}</td>
-                    <td>${backpacks[i].price}</td>
-                    <td>${backpacks[i].category}</td>
+                    <td>${sunScreens[i].id}</td>
+                    <td>${sunScreens[i].vendor}</td>
+                    <td>${sunScreens[i].name}</td>
+                    <td>${sunScreens[i].applTime}</td>
+                    <td>${sunScreens[i].sphrofAppl}</td>
+                    <td>${sunScreens[i].price}</td>
                     <td>${propertiesContent}</td>
                     <td>
-                        <a class="btn btn-warning edit-backpack-btn" data-id="${backpacks[i].id}" href="#">Редагувати</a>
-                        <a class="btn btn-danger delete-backpack-btn" data-id="${backpacks[i].id}" href="#">Видалити</a>
+                        <a class="btn btn-warning edit-sunScreen-btn" data-id="${sunScreens[i].id}" href="#">Редагувати</a>
+                        <a class="btn btn-danger delete-sunScreen-btn" data-id="${sunScreens[i].id}" href="#">Видалити</a>
                     </td>
                 </tr>`;
         }
-        backpacksTableBody.innerHTML=content;
+        sunScreensTableBody.innerHTML=content;
     })
     .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
     });
 }
- categoriesForm.addEventListener("submit", function(event) {
+ applsTimeForm.addEventListener("submit", function(event) {
         event.preventDefault(); 
         const dataToSend = {
-            name: document.querySelector('#categoryForm input[name="name"]').value,
-            id:document.querySelector('#categoryForm input[name="id"]').value
+            name: document.querySelector('#applTimeForm input[name="name"]').value,
+            id:document.querySelector('#applTimeForm input[name="id"]').value
         };
         let options={}
         if(dataToSend['id']){
@@ -156,14 +188,14 @@ function displayBackpacks(){
             };
         }
         
-        fetch(categoriesUrl, options)
+        fetch(applsTimeUrl, options)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            categoriesForm.reset();
-            document.querySelector('#categoryForm input[name="id"]').value='';
-            displayCategories();
+            applsTimeForm.reset();
+            document.querySelector('#applTimeForm input[name="id"]').value='';
+            displayApplsTime();
         });
 
     });
@@ -196,14 +228,51 @@ function displayBackpacks(){
                     document.getElementById('loginContainer').style.display='none';
                     document.getElementById('contentContainer').style.display='block';
                     document.getElementById('loginError').innerHTML='';
-                    displayCategories();
+                    displayApplsTime();
+                    displaySphrsofAppl();
                     displayProperties();
-                    displayBackpacks();
+                    displaySunScreens();
                 }
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
+    });
+    sphrsofApplForm.addEventListener("submit", function(event) {
+        event.preventDefault(); 
+        const dataToSend = {
+            name: document.querySelector('#sphrofApplForm input[name="name"]').value,
+            id:document.querySelector('#sphrofApplForm input[name="id"]').value
+        };
+        let options={}
+        if(dataToSend['id']){
+            options = {
+                method: 'UPDATE',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToSend)
+            };
+        } else{
+            options = {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToSend)
+            };
+        }
+        
+        fetch(sphrsofApplUrl, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            sphrsofApplForm.reset();
+            document.querySelector('#sphrofApplForm input[name="id"]').value='';
+            displaySphrsofAppl();
+        });
+
     });
      propertiesForm.addEventListener("submit", function(event) {
         event.preventDefault(); 
@@ -242,15 +311,16 @@ function displayBackpacks(){
         });
 
     });
-    backpacksForm.addEventListener("submit", function(event) {
+    sunScreensForm.addEventListener("submit", function(event) {
         event.preventDefault(); 
         const dataToSend = {
-            vendor: document.querySelector('#backpackForm input[name="vendor"]').value,
-            model: document.querySelector('#backpackForm input[name="model"]').value,
-            price:document.querySelector('#backpackForm input[name="price"]').value,
-            category: document.querySelector('#backpackForm input[name="category"]').value,
-            properties: document.querySelector('#backpackForm input[name="properties"]').value,
-            id:document.querySelector('#backpackForm input[name="id"]').value
+            vendor: document.querySelector('#sunScreenForm input[name="vendor"]').value,
+            name: document.querySelector('#sunScreenForm input[name="name"]').value,
+            price:document.querySelector('#sunScreenForm input[name="price"]').value,
+            applTime: document.querySelector('#sunScreenForm input[name="applTime"]').value,
+            sphrofAppl: document.querySelector('#sunScreenForm input[name="sphrofAppl"]').value,
+            properties: document.querySelector('#sunScreenForm input[name="properties"]').value,
+            id:document.querySelector('#sunScreenForm input[name="id"]').value
         };
         let options={}
         if(dataToSend['id']){
@@ -271,35 +341,35 @@ function displayBackpacks(){
             };
         }
         
-        fetch(backpacksUrl, options)
+        fetch(sunScreensUrl, options)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            backpacksForm.reset();
-            document.querySelector('#backpackForm input[name="id"]').value='';
-            displayBackpacks();
+            sunScreensForm.reset();
+            document.querySelector('#sunScreenForm input[name="id"]').value='';
+            displaySunScreens();
         });
 
     });
 document.addEventListener('click', function(event) {
-  if (event.target.classList.contains('delete-category-btn')) {
+  if (event.target.classList.contains('delete-applTime-btn')) {
     event.preventDefault();
     let id=event.target.getAttribute('data-id');
     const options = {
             method: 'DELETE'
         };
-    fetch(categoriesUrl+`?id=`+id, options)
+    fetch(applsTimeUrl+`?id=`+id, options)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            displayCategories();
+            displayApplsTime();
         });    
-  } else if (event.target.classList.contains('edit-category-btn')) {
+  } else if (event.target.classList.contains('edit-applTime-btn')) {
     event.preventDefault();
     let id=event.target.getAttribute('data-id');
-    fetch(categoriesUrl+`?id=`+id)
+    fetch(applsTimeUrl+`?id=`+id)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -307,11 +377,41 @@ document.addEventListener('click', function(event) {
             return response.json();
     })
     .then(data => {
-        let category=data;
-            document.querySelector('#categoryForm input[name="name"]').value=category.name,
-            document.querySelector('#categoryForm input[name="id"]').value=category.id
+        let applTime=data;
+            document.querySelector('#applTimeForm input[name="name"]').value=applTime.name,
+            document.querySelector('#applTimeForm input[name="id"]').value=applTime.id
         });    
-  } else if (event.target.classList.contains('delete-property-btn')) {
+  }
+    else if (event.target.classList.contains('delete-sphrofAppl-btn')) {
+    event.preventDefault();
+    let id=event.target.getAttribute('data-id');
+    const options = {
+            method: 'DELETE'
+        };
+    fetch(sphrsofApplUrl+`?id=`+id, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            displaySphrsofAppl();
+        });    
+  } else if (event.target.classList.contains('edit-sphrofAppl-btn')) {
+    event.preventDefault();
+    let id=event.target.getAttribute('data-id');
+    fetch(sphrsofApplUrl+`?id=`+id)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+    })
+    .then(data => {
+        let sphrofAppl=data;
+            document.querySelector('#sphrofApplForm input[name="name"]').value=sphrofAppl.name,
+            document.querySelector('#sphrofApplForm input[name="id"]').value=sphrofAppl.id
+        });    
+  }
+  else if (event.target.classList.contains('delete-property-btn')) {
     event.preventDefault();
     let id=event.target.getAttribute('data-id');
     const options = {
@@ -340,23 +440,23 @@ document.addEventListener('click', function(event) {
             document.querySelector('#propertyForm input[name="name"]').value=property.name,
             document.querySelector('#propertyForm input[name="id"]').value=property.id
         });    
-  } else if (event.target.classList.contains('delete-backpack-btn')) {
+  } else if (event.target.classList.contains('delete-sunScreen-btn')) {
     event.preventDefault();
     let id=event.target.getAttribute('data-id');
     const options = {
             method: 'DELETE'
         };
-    fetch(backpacksUrl+`?id=`+id, options)
+    fetch(sunScreensUrl+`?id=`+id, options)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            displayBackpacks();
+            displaySunScreens();
         });    
-  } else if (event.target.classList.contains('edit-backpack-btn')) {
+  } else if (event.target.classList.contains('edit-sunScreen-btn')) {
     event.preventDefault();
     let id=event.target.getAttribute('data-id');
-    fetch(backpacksUrl+`?id=`+id)
+    fetch(sunScreensUrl+`?id=`+id)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -364,13 +464,14 @@ document.addEventListener('click', function(event) {
             return response.json();
     })
     .then(data => {
-        let backpack=data;
-            document.querySelector('#backpackForm input[name="model"]').value=backpack.model,
-            document.querySelector('#backpackForm input[name="vendor"]').value=backpack.vendor,
-            document.querySelector('#backpackForm input[name="category"]').value=backpack.category,
-            document.querySelector('#backpackForm input[name="price"]').value=backpack.price,
-            document.querySelector('#backpackForm input[name="properties"]').value=backpack.properties,
-            document.querySelector('#backpackForm input[name="id"]').value=backpack.id
+        let sunScreen=data;
+            document.querySelector('#sunScreenForm input[name="name"]').value=sunScreen.name,
+            document.querySelector('#sunScreenForm input[name="vendor"]').value=sunScreen.vendor,
+            document.querySelector('#sunScreenForm input[name="applTime"]').value=sunScreen.applTime,
+            document.querySelector('#sunScreenForm input[name="sphrofAppl"]').value=sunScreen.sphrofAppl,
+            document.querySelector('#sunScreenForm input[name="price"]').value=sunScreen.price,
+            document.querySelector('#sunScreenForm input[name="properties"]').value=sunScreen.properties,
+            document.querySelector('#sunScreenForm input[name="id"]').value=sunScreen.id
         });    
   }
    else if (event.target.classList.contains('nav-btn')) {

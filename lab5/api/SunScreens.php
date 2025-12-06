@@ -27,7 +27,7 @@ if($_SERVER['REQUEST_METHOD']=='UPDATE'){
     $json_data = file_get_contents('php://input');
     $data=json_decode($json_data,true);
     $a->update(['id'=>$data['id'],'vendor'=>$data['vendor'],
-            'model'=>$data['model'],
+            'name'=>$data['name'],
             'price'=>$data['price'],
             'applTime'=>$data['applTime'],
             'sphrofAppl'=>$data['sphrofAppl'],
