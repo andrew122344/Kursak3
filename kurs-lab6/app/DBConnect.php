@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "andrew2006";
+$password = "aaaa2006aaaa";
 $database ='db_sunscreen';
 // Create connection
 $conn = new mysqli($servername, $username, $password,$database);

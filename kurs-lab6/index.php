@@ -8,7 +8,7 @@ require_once('./app/SphrofApplList.php');
 require_once('./app/ApplTimeList.php');
 $servername = "localhost";
 $username = "root";
-$password = "andrew2006";
+$password = "aaaa2006aaaa";
 $database ='db_sunscreen';
 $a=new ApplTimeList();
 // Create connection

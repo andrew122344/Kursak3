@@ -1,18 +1,18 @@
 const contentTabs=document.querySelectorAll('.tab-content');
-const applsTimeUrl=`http://localhost/Kursak/kurs-lab6/api/ApplsTime.php`;
+const applsTimeUrl=`http://localhost/Kursak/kurs-lab6/api/ApplsTime`;
 const applsTimeTableBody=document.querySelector('#applTimeTable tbody');
 const applsTimeForm=document.getElementById('applTimeForm');
-const sphrsofApplUrl=`http://localhost/Kursak/kurs-lab6/api/SphrsofAppl.php`;
+const sphrsofApplUrl=`http://localhost/Kursak/kurs-lab6/api/SphrsofAppl`;
 const sphrsofApplTableBody=document.querySelector('#sphrofApplTable tbody');
 const sphrsofApplForm=document.getElementById('sphrofApplForm');
-const propertiesUrl=`http://localhost/Kursak/kurs-lab6/api/Properties.php`;
+const propertiesUrl=`http://localhost/Kursak/kurs-lab6/api/Properties`;
 const propertiesTableBody=document.querySelector('#propertyTable tbody');
 const propertiesForm=document.getElementById('propertyForm');
-const sunScreensUrl=`http://localhost/Kursak/kurs-lab6/api/SunScreens.php`;
+const sunScreensUrl=`http://localhost/Kursak/kurs-lab6/api/SunScreens`;
 const sunScreensTableBody=document.querySelector('#sunScreenTable tbody');
 const sunScreensForm=document.getElementById('sunScreenForm');
 const loginForm=document.getElementById('loginForm');
-const profileUrl=`http://localhost/Kursak/kurs-lab6/api/Profile.php`;
+const profileUrl=`http://localhost/Kursak/kurs-lab6/api/Profile`;
 const applTimeDropdown=document.querySelector('#sunScreenForm select[name="applTimeid"]');
 const sphrofApplDropdown=document.querySelector('#sunScreenForm select[name="sphrofApplid"]');
 function getLoginInfo(){
