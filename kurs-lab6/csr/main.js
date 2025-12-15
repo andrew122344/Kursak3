@@ -15,6 +15,7 @@ const loginForm=document.getElementById('loginForm');
 const profileUrl=`http://localhost/Kursak/kurs-lab6/api/Profile`;
 const applTimeDropdown=document.querySelector('#sunScreenForm select[name="applTimeid"]');
 const sphrofApplDropdown=document.querySelector('#sunScreenForm select[name="sphrofApplid"]');
+const searchForm=document.getElementById('searchForm');
 function getLoginInfo(){
     fetch(profileUrl)
     .then(response => {
@@ -33,7 +34,7 @@ function getLoginInfo(){
             displayApplsTime();
             displaySphrsofAppl();
             displayProperties();
-            displaySunScreens();
+            displaySunScreens('');
         }
     })
     .catch(error => {
@@ -140,8 +141,12 @@ function displayProperties(){
         console.error('There was a problem with the fetch operation:', error);
     });
 }
-function displaySunScreens(){
-    fetch(sunScreensUrl)
+function displaySunScreens(search){
+    let url=sunScreensUrl;
+    if(search!=''){
+        url+='?search='+search;
+    }
+    fetch(url)
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -178,6 +183,11 @@ function displaySunScreens(){
         console.error('There was a problem with the fetch operation:', error);
     });
 }
+searchForm.addEventListener("submit", function(event) {
+        event.preventDefault(); 
+        displaySunScreens(document.querySelector('#searchForm input[name="search"]').value);
+        searchForm.reset();
+    });
  applsTimeForm.addEventListener("submit", function(event) {
         event.preventDefault(); 
         const dataToSend = {
@@ -246,7 +256,7 @@ function displaySunScreens(){
                     displayApplsTime();
                     displaySphrsofAppl();
                     displayProperties();
-                    displaySunScreens();
+                    displaySunScreens('');
                 }
             })
             .catch(error => {
@@ -368,7 +378,7 @@ function displaySunScreens(){
             }
             sunScreensForm.reset();
             document.querySelector('#sunScreenForm input[name="id"]').value='';
-            displaySunScreens();
+            displaySunScreens('');
         });
 
     });
@@ -471,7 +481,7 @@ document.addEventListener('click', function(event) {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            displaySunScreens();
+            displaySunScreens('');
         });    
   } else if (event.target.classList.contains('edit-sunScreen-btn')) {
     event.preventDefault();

@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 session_start();
 if(!$_SESSION['user']){
     header('Location: login.php');
@@ -46,11 +43,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                 $a->updateSunScreenProperty($_POST['id'],$propArray[$i]['id'],$_POST['prop-'.$propArray[$i]['id']]);
             }
         }
-        header('Location: SunScreens.php');
     }
-    $a->getAllFromDatabase();
+    header('Location: SunScreens.php');
 } else{
-    $a->getAllFromDatabase();
+    if(isset($_GET['search'])){
+        $a->getAllFromDatabaseBySearchCriteria($_GET['search']);
+    }else{
+        $a->getAllFromDatabase();
+    }
     if(isset($_GET['action'])&&$_GET['action']=='delete'){
         $a->deleteFromDatabaseById($_GET['id']);
         header('Location: SunScreens.php');
@@ -79,12 +79,16 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             <h1>Cонцезахисні засоби</h1>
             <div class="row">
                 <div class="col-md-8">
+                    <form method="GET">
+                        <input type="text" required name="search" placeholder="Шукати"/>
+                        <button type="submit" class="btn btn-primary">Пошук</button>
+                    </form>
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Назва</th>
                                 <th>Виробник</th>
+                                <th>Назва</th>
                                 <th>Час застосування</th>
                                 <th>Сфера застосування</th>
                                 <th>Ціна</th>
@@ -100,10 +104,10 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                 <div class="col-md-4">
                     <form method="POST">
                         <p>
-                            <input type="text" name="name" value="<?php echo $item?$item['name']:'';?>" class="form-control" placeholder="Назва" required/>
+                            <input type="text" name="vendor" value="<?php echo $item?$item['vendor']:'';?>" class="form-control" placeholder="Виробник" required/>
                         </p>
                         <p>
-                            <input type="text" name="vendor" value="<?php echo $item?$item['vendor']:'';?>" class="form-control" placeholder="Виробник" required/>
+                            <input type="text" name="name" value="<?php echo $item?$item['name']:'';?>" class="form-control" placeholder="Назва" required/>
                         </p>
                         <p>
                             <select name="applTimeid" class="form-select" placeholder="Час застосування" required><?php echo $timeList->getAsSelectOptions($item?$item['applTimeid']:'');?></select>

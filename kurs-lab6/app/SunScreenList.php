@@ -115,5 +115,21 @@ class SunScreenList extends BaseList{
             }
         }
     }
+    public function getAllFromDatabaseBySearchCriteria($search){
+        global $conn;
+        $stmt = $conn->prepare("SELECT sunscreens.*, applstime.name appltimename, sphrsofappl.name sphrofapplname FROM sunscreens
+        INNER JOIN applstime ON applstime.id=sunscreens.appltimeid
+        INNER JOIN sphrsofappl ON sphrsofappl.id=sunscreens.sphrofapplid WHERE sunscreens.vendor LIKE ? OR sunscreens.name LIKE ? OR applstime.name LIKE ? OR sphrsofappl.name LIKE ?");
+        $stmt->bind_param("ssss", $search,$search,$search,$search);
+        $search="%".$search."%";
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+        // output data of each row
+        while($row = $result->fetch_assoc()) {
+            $this->add($row);
+        }
+        }
+    }
 }
 ?>

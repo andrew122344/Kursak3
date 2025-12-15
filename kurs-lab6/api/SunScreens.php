@@ -55,6 +55,10 @@ else if($_SERVER['REQUEST_METHOD']=='GET'){
         $item=$a->getById($_GET['id']);
         $item['properties']=$a->getSunScreenPropertiesById($_GET['id']);
         echo json_encode($item);
+    } else if(isset($_GET['search'])){    
+        $a=new SunScreenList();    
+        $a->getAllFromDatabaseBySearchCriteria($_GET['search']);    
+        echo $a->getAsJSON();
     } else{
         echo $a->getAsJSON();
     }
