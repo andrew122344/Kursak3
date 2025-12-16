@@ -21,7 +21,7 @@ if (curl_errno($ch)) {
     echo "cURL Error: " . $error_msg;
 } else {
     // Process the response
-    $data=json_decode($response,TRUE)['SunScreens'];
+    $data=json_decode($response,TRUE)['sunScreens'];
     for($i=0;$i<count($data);$i++){
         echo $data[$i]['id'].". ".$data[$i]['vendor']." ".$data[$i]['name']."</br>";
         echo "Час застосування: <i>".$data[$i]['applTime']."</i></br>";
