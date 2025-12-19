@@ -1,0 +1,136 @@
+:root {
+    --primary-color: #1976d2;
+    --primary-hover: #0d47a1;
+    --secondary-color: #263238;
+    --accent-color: #90caf9;
+    --bg-light: #f5f9ff;
+    --text-main: #1976d2;
+    --success-green: #2e7d32;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+    margin: 20px 0 30px;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+/* Навігація */
+.nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    margin-bottom: 30px;
+}
+
+.nav-btn {
+    padding: 10px 20px;
+    border-radius: 999px;
+    background-color: #ffffff;
+    border: 1px solid #e0e7f1;
+    color: var(--primary-color);
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: 0.25s ease;
+}
+
+.nav-btn:hover {
+    background-color: #e3f2fd;
+    transform: translateY(-2px);
+}
+
+/* Table + Form Wrapper */
+.table-form-wrapper {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+}
+
+.table-container {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.form-container {
+    flex: 0 0 320px;
+}
+
+/* Table */
+.table {
+    background-color: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.table thead {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
+
+.table thead th {
+    border-bottom: none;
+    font-weight: 600;
+    padding: 10px;
+}
+
+/* Фікс кнопок дій у колонці */
+.table td:nth-child(8) > * {
+    display: block;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.table td:nth-child(8) > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Кнопки */
+.btn-outline-warning,
+.btn-outline-danger {
+    width: 110px;
+    font-weight: 600;
+}
+
+/* Ціна */
+.table td.fs-5 {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+/* Форми */
+.form-control,
+.form-select {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 10px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .table-form-wrapper {
+        flex-direction: column;
+    }
+
+    .form-container {
+        width: 100%;
+    }
+
+    .table th:nth-child(7),
+    .table td:nth-child(7) {
+        width: auto;
+        max-width: none;
+    }
+}
