@@ -10,23 +10,6 @@ require_once('../app/PropertyList.php');
 $a = new PropertyList();
 $a->getAllFromDatabase();
 $item=null;
-if($_SERVER['REQUEST_METHOD']=='POST'){
-    if($_POST['id']==""){
-        $a->insertIntoDatabase(['name'=>$_POST['name'], 'units'=>$_POST['units']]);
-    } else{
-        $a->updateDatabaseById(['id'=>$_POST['id'],'name'=>$_POST['name'], 'units'=>$_POST['units']]);
-        header('Location: Properties.php');
-    }
-    
-} else{
-    if(isset($_GET['action'])&&$_GET['action']=='delete'){
-        $a->deleteFromDatabaseById($_GET['id']);
-        header('Location: Properties.php');
-    } else if(isset($_GET['action'])&&$_GET['action']=='update'){
-        $item=$a->getById($_GET['id']);
-    }
-    
-}
 ?>
 <html>
     <head>
@@ -46,35 +29,18 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             </ul>
             <h1>Характеристики</h1>
             <div class="row">
-                <div class="col-md-8">
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Назва</th>
                                 <th>Одиниці вимірювання</th>
-                                <th>Дії</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php echo $a->getAsTableBody();?>
                         </tbody>
                     </table>
-                </div>
-                <div class="col-md-4">
-                    <form method="POST">
-                        <p>
-                            <input type="text" name="name" value="<?php echo $item?$item['name']:'';?>" class="form-control" placeholder="Назва характеристики" required/>
-                        </p>
-                        <p>
-                            <input type="text" name="units" value="<?php echo $item?$item['units']:'';?>" class="form-control" placeholder="Одиниці вимірювання" required/>
-                        </p>
-                        <p>
-                            <input type="hidden" name="id" value="<?php echo $item?$item['id']:'';?>"/>
-                            <button class="btn btn-success" type="submit">Зберегти</button>
-                        </p>
-                    </form>
-                </div>
             </div>
         </div>
     </body>

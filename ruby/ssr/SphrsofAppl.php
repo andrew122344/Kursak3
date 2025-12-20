@@ -8,26 +8,8 @@ if(!$_SESSION['user']){
 }
 require_once('../app/SphrofApplList.php');
 $item=null;
-if($_SERVER['REQUEST_METHOD']=='POST'){
-    $a = new SphrofApplList();
-    $a->getAllFromDatabase();
-    if($_POST['id']==""){
-        $a->insertIntoDatabase(['name'=>$_POST['name']]);
-    } else{
-        $a->updateDatabaseById(['id'=>$_POST['id'],'name'=>$_POST['name']]);
-        header('Location: SphrsofAppl.php');
-    }
-} else{
-    $a = new SphrofApplList();
-    $a->getAllFromDatabase();
-    if(isset($_GET['action'])&&$_GET['action']=='delete'){
-        $a->deleteFromDatabaseById($_GET['id']);
-        header('Location: SphrsofAppl.php');
-    } else if(isset($_GET['action'])&&$_GET['action']=='update'){
-        $item=$a->getById($_GET['id']);
-    }
-    
-}$json_data = file_get_contents('php://input');
+$a = new SphrofApplList();
+$a->getAllFromDatabase();
 
 ?>
 <html>
@@ -48,31 +30,17 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             </ul>
             <h1>Сфери застосування</h1>
             <div class="row">
-                <div class="col-md-8">
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Назва</th>
-                                <th>Дії</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php echo $a->getAsTableBody();?>
                         </tbody>
                     </table>
-                </div>
-                <div class="col-md-4">
-                    <form method="POST">
-                        <p>
-                            <input type="text" name="name" value="<?php echo $item?$item['name']:'';?>" class="form-control" placeholder="Cфера застосування" required/>
-                        </p>
-                        <p>
-                            <input type="hidden" name="id" value="<?php echo $item?$item['id']:'';?>"/>
-                            <button class="btn btn-success" type="submit">Зберегти</button>
-                        </p>
-                    </form>
-                </div>
             </div>
         </div>
     </body>
