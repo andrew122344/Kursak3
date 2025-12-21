@@ -104,9 +104,14 @@ class SunScreenList extends BaseList{
     }
     public function updateDatabaseById($params){
         global $conn;
+        $stmtCheck = $conn->prepare("SELECT id FROM sunscreens WHERE vendor = ? AND `name` = ? AND id != ?");
+        $stmtCheck->bind_param("sss", $params['vendor'], $params['name'], $params['id']);
+        $stmtCheck->execute();
+        if ($stmtCheck->get_result()->num_rows > 0) return false;
         $stmt = $conn->prepare("UPDATE `sunscreens` SET `vendor`=?, `name`=?,`price`=?, `appltimeid`=?, `sphrofapplid`=? WHERE `id`=?;");
         $stmt->bind_param("ssdsss", $params['vendor'],$params['name'],$params['price'],$params['appltimeid'],$params['sphrofapplid'],$params['id']);
         $stmt->execute();
+        return true;
     }
     public function deleteFromDatabaseById($id){
         global $conn;

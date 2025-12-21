@@ -18,8 +18,13 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             $errorMessage = "Помилка: Така характеристика вже внесена в базу даних!";
         }
     } else{
-        $a->updateDatabaseById(['id'=>$_POST['id'],'name'=>$_POST['name'], 'units'=>$_POST['units']]);
-        header('Location: Properties.php');
+       $result = $a->updateDatabaseById(['id'=>$_POST['id'],'name'=>$_POST['name'], 'units'=>$_POST['units']]);
+        if ($result === false) {
+             $errorMessage = "Помилка: Така характеристика вже внесена в базу даних!";
+             $item = ['id'=>$_POST['id'], 'name'=>$_POST['name'], 'units'=>$_POST['units']];
+        } else {
+            header('Location: Properties.php');;
+        }
     }
 } else{
     if(isset($_GET['action'])&&$_GET['action']=='delete'){

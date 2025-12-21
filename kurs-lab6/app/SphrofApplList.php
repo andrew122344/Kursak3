@@ -90,15 +90,29 @@ class SphrofApplList extends BaseList{
     }
     public function updateDatabaseById($params){
         global $conn;
+        $stmtCheck = $conn->prepare("SELECT id FROM sphrsofappl WHERE name = ? AND id != ?");
+        $stmtCheck->bind_param("ss", $params['name'], $params['id']);
+        $stmtCheck->execute();
+        if ($stmtCheck->get_result()->num_rows > 0) {
+            return false;
+        }
         $stmt = $conn->prepare("UPDATE `sphrsofappl` SET `name`=? WHERE `id`=?;");
         $stmt->bind_param("ss", $params['name'],$params['id']);
         $stmt->execute();
+        return true;
     }
     public function deleteFromDatabaseById($id){
         global $conn;
+        $stmtCheck = $conn->prepare("SELECT id FROM sunscreens WHERE sphrofapplid = ?");
+        $stmtCheck->bind_param("s", $id);
+        $stmtCheck->execute();
+        if ($stmtCheck->get_result()->num_rows > 0) {
+            return false; // Заборона видалення
+        }
         $stmt = $conn->prepare("DELETE FROM sphrsofappl WHERE id=?");
         $stmt->bind_param("s", $id);
         $stmt->execute();
+        return true;
     }
     public function getAsSelectOptions($selectedId){
         $content='';

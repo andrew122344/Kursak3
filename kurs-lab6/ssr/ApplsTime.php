@@ -9,8 +9,8 @@ error_reporting(E_ALL);
 require_once('../app/ApplTimeList.php');
 $item=null;
 $errorMessage = '';
+$a = new ApplTimeList();
 if($_SERVER['REQUEST_METHOD']=='POST'){
-    $a = new ApplTimeList();
     $a->getAllFromDatabase();
     if($_POST['id']==""){
         $result = $a->insertIntoDatabase(['name'=>$_POST['name']]);
@@ -18,20 +18,31 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             $errorMessage = "Помилка: Такий час застосування вже внесений в базу даних!";
         }
     } else{
-        $a->updateDatabaseById(['id'=>$_POST['id'],'name'=>$_POST['name']]);
-        header('Location: ApplsTime.php');
+        $result = $a->updateDatabaseById(['id'=>$_POST['id'],'name'=>$_POST['name']]);
+        if ($result === false) {
+            $errorMessage = "Помилка: Такий час застосування вже внесений в базу даних!";
+            $item = ['id'=>$_POST['id'], 'name'=>$_POST['name']];
+        } else {
+            header('Location: ApplsTime.php');
+            exit();
+        }
     }
 } else{
-    $a = new ApplTimeList();
-    $a->getAllFromDatabase();
     if(isset($_GET['action'])&&$_GET['action']=='delete'){
-        $a->deleteFromDatabaseById($_GET['id']);
-        header('Location: ApplsTime.php');
+        if(!$a->deleteFromDatabaseById($_GET['id'])){
+            $errorMessage = "Помилка: Неможливо видалити цей запис, оскільки він використовується в існуючих сонцезахисних засобах!";
+            $a->getAllFromDatabase();
+        } else {
+            header('Location: ApplsTime.php');
+            exit();
+        }
     } else if(isset($_GET['action'])&&$_GET['action']=='update'){
+        $a->getAllFromDatabase();
         $item=$a->getById($_GET['id']);
+    } else {
+        $a->getAllFromDatabase();
     }
-    
-}$json_data = file_get_contents('php://input');
+}
 
 ?>
 <html>

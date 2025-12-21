@@ -9,8 +9,8 @@ if(!$_SESSION['user']){
 require_once('../app/SphrofApplList.php');
 $item=null;
 $errorMessage = '';
+$a = new SphrofApplList();
 if($_SERVER['REQUEST_METHOD']=='POST'){
-    $a = new SphrofApplList();
     $a->getAllFromDatabase();
     if($_POST['id']==""){
        $result = $a->insertIntoDatabase(['name'=>$_POST['name']]);
@@ -18,20 +18,31 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             $errorMessage = "Помилка: Така сфера застосування вже внесена в базу даних!";
         }
     } else{
-        $a->updateDatabaseById(['id'=>$_POST['id'],'name'=>$_POST['name']]);
-        header('Location: SphrsofAppl.php');
+       $result = $a->updateDatabaseById(['id'=>$_POST['id'],'name'=>$_POST['name']]);
+        if ($result === false) {
+            $errorMessage = "Помилка: Така сфера застосування вже внесена в базу даних!";
+            $item = ['id'=>$_POST['id'], 'name'=>$_POST['name']];
+        } else {
+            header('Location: SphrsofAppl.php');
+            exit();
+        }
     }
 } else{
-    $a = new SphrofApplList();
-    $a->getAllFromDatabase();
-    if(isset($_GET['action'])&&$_GET['action']=='delete'){
-        $a->deleteFromDatabaseById($_GET['id']);
-        header('Location: SphrsofAppl.php');
+  if(isset($_GET['action'])&&$_GET['action']=='delete'){
+        if(!$a->deleteFromDatabaseById($_GET['id'])){
+            $errorMessage = "Помилка: Неможливо видалити цей запис, оскільки він використовується в існуючих сонцезахисних засобах";
+            $a->getAllFromDatabase();
+        } else {
+            header('Location: SphrsofAppl.php');
+            exit();
+        }
     } else if(isset($_GET['action'])&&$_GET['action']=='update'){
+        $a->getAllFromDatabase();
         $item=$a->getById($_GET['id']);
+    } else {
+        $a->getAllFromDatabase();
     }
-    
-}$json_data = file_get_contents('php://input');
+}
 
 ?>
 <html>

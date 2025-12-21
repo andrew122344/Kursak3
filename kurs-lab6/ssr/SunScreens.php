@@ -40,18 +40,38 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             }
         } header('Location: SunScreens.php');}
     } else{
-        $propArray=$propList->getAsAssocArray();
-        $a->updateDatabaseById(['id'=>$_POST['id'],
+        $result = $a->updateDatabaseById(['id'=>$_POST['id'],
         'vendor'=>$_POST['vendor'], 
         'name'=>$_POST['name'],
         'appltimeid'=>$_POST['applTimeid'],
         'sphrofapplid'=>$_POST['sphrofApplid'],   
         'price'=>$_POST['price']]);
-        for ($i=0;$i<count($propArray);$i++){
-            if(isset($_POST['prop-'.$propArray[$i]['id']])){
-                $a->updateSunScreenProperty($_POST['id'],$propArray[$i]['id'],$_POST['prop-'.$propArray[$i]['id']]);
+        if ($result === false) {
+             $errorMessage = "Помилка: Такий сонцезахисний засіб вже внесений в базу даних!";
+             if(isset($_GET['search'])){
+                 $a->getAllFromDatabaseBySearchCriteria($_GET['search']);
+            }else{
+                 $a->getAllFromDatabase();
             }
-        }  header('Location: SunScreens.php');
+            $item = $_POST;
+            $itemProps = [];
+            foreach ($_POST as $key => $value) {
+                if (strpos($key, 'prop-') === 0) {
+                    $itemProps[] = [
+                        'propertyid' => substr($key, 5),
+                        'value' => $value
+                    ];
+                }
+            }
+        } else {
+            $propArray=$propList->getAsAssocArray();
+            for ($i=0;$i<count($propArray);$i++){
+                if(isset($_POST['prop-'.$propArray[$i]['id']])){
+                    $a->updateSunScreenProperty($_POST['id'],$propArray[$i]['id'],$_POST['prop-'.$propArray[$i]['id']]);
+                }
+            }
+            header('Location: SunScreens.php');
+        }
     }
 } else{
     if(isset($_GET['search'])){
