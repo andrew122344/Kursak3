@@ -10,14 +10,17 @@ require_once('../app/PropertyList.php');
 $a = new PropertyList();
 $a->getAllFromDatabase();
 $item=null;
+$errorMessage = '';
 if($_SERVER['REQUEST_METHOD']=='POST'){
     if($_POST['id']==""){
-        $a->insertIntoDatabase(['name'=>$_POST['name'], 'units'=>$_POST['units']]);
+        $result = $a->insertIntoDatabase(['name'=>$_POST['name'], 'units'=>$_POST['units']]);
+        if ($result === false) {
+            $errorMessage = "Помилка: Така характеристика вже внесена в базу даних!";
+        }
     } else{
         $a->updateDatabaseById(['id'=>$_POST['id'],'name'=>$_POST['name'], 'units'=>$_POST['units']]);
         header('Location: Properties.php');
     }
-    
 } else{
     if(isset($_GET['action'])&&$_GET['action']=='delete'){
         $a->deleteFromDatabaseById($_GET['id']);
@@ -63,6 +66,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                 </div>
                 <div class="col-md-4">
                     <form method="POST">
+                        <?php if($errorMessage): ?>
+                            <div class="alert alert-danger"><?php echo $errorMessage; ?></div>
+                        <?php endif; ?>
                         <p>
                             <input type="text" name="name" value="<?php echo $item?$item['name']:'';?>" class="form-control" placeholder="Назва характеристики" required/>
                         </p>

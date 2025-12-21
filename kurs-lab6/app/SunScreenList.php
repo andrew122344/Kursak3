@@ -91,6 +91,12 @@ class SunScreenList extends BaseList{
     }
     public function insertIntoDatabase($params){
         global $conn;
+        $stmtCheck = $conn->prepare("SELECT id FROM sunscreens WHERE vendor = ? AND `name` = ?");
+        $stmtCheck->bind_param("ss", $params['vendor'], $params['name']);
+        $stmtCheck->execute();
+        if ($stmtCheck->get_result()->num_rows > 0) {
+            return false;
+        }
         $stmt = $conn->prepare("INSERT INTO sunscreens VALUES (DEFAULT, ?,?,?,?,?)");
         $stmt->bind_param("ssdss", $params['vendor'],$params['name'],$params['price'],$params['appltimeid'],$params['sphrofapplid']);
         $stmt->execute();

@@ -8,11 +8,15 @@ if(!$_SESSION['user']){
 }
 require_once('../app/SphrofApplList.php');
 $item=null;
+$errorMessage = '';
 if($_SERVER['REQUEST_METHOD']=='POST'){
     $a = new SphrofApplList();
     $a->getAllFromDatabase();
     if($_POST['id']==""){
-        $a->insertIntoDatabase(['name'=>$_POST['name']]);
+       $result = $a->insertIntoDatabase(['name'=>$_POST['name']]);
+        if ($result === false) {
+            $errorMessage = "Помилка: Така сфера застосування вже внесена в базу даних!";
+        }
     } else{
         $a->updateDatabaseById(['id'=>$_POST['id'],'name'=>$_POST['name']]);
         header('Location: SphrsofAppl.php');
@@ -64,6 +68,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                 </div>
                 <div class="col-md-4">
                     <form method="POST">
+                        <?php if($errorMessage): ?>
+                            <div class="alert alert-danger"><?php echo $errorMessage; ?></div>
+                        <?php endif; ?>
                         <p>
                             <input type="text" name="name" value="<?php echo $item?$item['name']:'';?>" class="form-control" placeholder="Cфера застосування" required/>
                         </p>

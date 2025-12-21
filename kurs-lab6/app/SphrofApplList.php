@@ -75,6 +75,13 @@ class SphrofApplList extends BaseList{
     
     public function insertIntoDatabase($params){
         global $conn;
+        // Перевірка на дублікат
+        $stmtCheck = $conn->prepare("SELECT id FROM sphrsofappl WHERE name = ?");
+        $stmtCheck->bind_param("s", $params['name']);
+        $stmtCheck->execute();
+        if ($stmtCheck->get_result()->num_rows > 0) {
+            return false; // Запис вже існує
+        }
         $stmt = $conn->prepare("INSERT INTO sphrsofappl VALUES (DEFAULT, ?)");
         $stmt->bind_param("s", $params['name']);
         $stmt->execute();

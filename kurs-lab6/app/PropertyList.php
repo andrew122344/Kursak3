@@ -90,6 +90,13 @@ class PropertyList extends BaseList{
     }
     public function insertIntoDatabase($params){
         global $conn;
+        // Перевірка на дублікат за назвою
+        $stmtCheck = $conn->prepare("SELECT id FROM properties WHERE name = ?");
+        $stmtCheck->bind_param("s", $params['name']);
+        $stmtCheck->execute();
+        if ($stmtCheck->get_result()->num_rows > 0) {
+            return false;
+        }
         $stmt = $conn->prepare("INSERT INTO properties VALUES (DEFAULT, ?,?)");
         $stmt->bind_param("ss", $params['name'],$params['units']);
         $stmt->execute();

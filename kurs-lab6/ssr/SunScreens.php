@@ -17,6 +17,7 @@ $propArray=$propList->getAsAssocArray();
 $a = new SunScreenList();
 $item=null;
 $itemProps=[];
+$errorMessage = '';
 if($_SERVER['REQUEST_METHOD']=='POST'){
     if($_POST['id']==""){
         $sunScreenid=$a->insertIntoDatabase(['vendor'=>$_POST['vendor'], 
@@ -25,11 +26,19 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         'sphrofapplid'=>$_POST['sphrofApplid'],  
         'price'=>$_POST['price']
         ]);
+        if ($sunScreenid === false) {
+            $errorMessage = "Помилка: Такий сонцезахисний засіб вже внесений в базу даних!";
+            if(isset($_GET['search'])){
+                 $a->getAllFromDatabaseBySearchCriteria($_GET['search']);
+            }else{
+                 $a->getAllFromDatabase();
+            }
+        } else {
         for ($i=0;$i<count($propArray);$i++){
             if(isset($_POST['prop-'.$propArray[$i]['id']])){
                 $a->addSunScreenProperty($sunScreenid,$propArray[$i]['id'],$_POST['prop-'.$propArray[$i]['id']]);
             }
-        }
+        } header('Location: SunScreens.php');}
     } else{
         $propArray=$propList->getAsAssocArray();
         $a->updateDatabaseById(['id'=>$_POST['id'],
@@ -42,9 +51,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
             if(isset($_POST['prop-'.$propArray[$i]['id']])){
                 $a->updateSunScreenProperty($_POST['id'],$propArray[$i]['id'],$_POST['prop-'.$propArray[$i]['id']]);
             }
-        }
+        }  header('Location: SunScreens.php');
     }
-    header('Location: SunScreens.php');
 } else{
     if(isset($_GET['search'])){
         $a->getAllFromDatabaseBySearchCriteria($_GET['search']);
@@ -88,8 +96,8 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Виробник</th>
                                 <th>Назва</th>
+                                <th>Виробник</th>
                                 <th>Час застосування</th>
                                 <th>Сфера застосування</th>
                                 <th>Ціна</th>
@@ -104,11 +112,14 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
                 </div>
                 <div class="col-md-4">
                     <form method="POST">
-                        <p>
-                            <input type="text" name="vendor" value="<?php echo $item?$item['vendor']:'';?>" class="form-control" placeholder="Виробник" required/>
-                        </p>
+                        <?php if($errorMessage): ?>
+                            <div class="alert alert-danger"><?php echo $errorMessage; ?></div>
+                        <?php endif; ?>
                         <p>
                             <input type="text" name="name" value="<?php echo $item?$item['name']:'';?>" class="form-control" placeholder="Назва" required/>
+                        </p>
+                        <p>
+                            <input type="text" name="vendor" value="<?php echo $item?$item['vendor']:'';?>" class="form-control" placeholder="Виробник" required/>
                         </p>
                         <p>
                             <select name="applTimeid" class="form-select" placeholder="Час застосування" required><?php echo $timeList->getAsSelectOptions($item?$item['applTimeid']:'');?></select>
